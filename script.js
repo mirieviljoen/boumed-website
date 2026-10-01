@@ -1,4 +1,32 @@
 document.addEventListener("DOMContentLoaded", () => {
+    const menuToggle = document.querySelector(".menu-toggle");
+    const navigation = document.querySelector(".nav-links");
+    const mobileViewport = window.matchMedia("(max-width: 800px)");
+
+    if (menuToggle && navigation) {
+        menuToggle.hidden = false;
+        document.querySelector(".site-header").classList.add("has-mobile-menu");
+        const closeMenu = () => {
+            menuToggle.setAttribute("aria-expanded", "false");
+            navigation.classList.remove("is-open");
+        };
+        menuToggle.addEventListener("click", () => {
+            const open = menuToggle.getAttribute("aria-expanded") !== "true";
+            menuToggle.setAttribute("aria-expanded", String(open));
+            navigation.classList.toggle("is-open", open);
+        });
+        navigation.addEventListener("click", (event) => {
+            if (event.target.closest("a")) closeMenu();
+        });
+        document.addEventListener("keydown", (event) => {
+            if (event.key === "Escape" && menuToggle.getAttribute("aria-expanded") === "true") {
+                closeMenu();
+                menuToggle.focus();
+            }
+        });
+        mobileViewport.addEventListener("change", closeMenu);
+    }
+
     const searchButton = document.querySelector(".search-button");
     const navLinks = document.querySelectorAll(".nav-links a");
     const sections = document.querySelectorAll("main section[id]");
